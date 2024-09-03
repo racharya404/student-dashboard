@@ -166,9 +166,9 @@ const StudentDashboard = () => {
         <div className={`min-h-screen transition-colors duration-300 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}>
             <Menu />
             <main className="container mx-auto p-4">
-                <div className="mb-8 flex flex-wrap justify-between items-center">
-                    <h2 className="text-3xl font-bold mb-2 md:mb-0">Student Data</h2>
-                    <div className="flex flex-wrap items-center space-x-2">
+                <div className="mb-8 flex flex-col md:flex-row md:justify-between md:items-center">
+                    <h2 className="text-3xl font-bold mb-4 md:mb-0">Student Data</h2>
+                    <div className="flex flex-wrap items-center gap-2">
                         <Input
                             type="text"
                             placeholder="Search students..."
@@ -178,7 +178,7 @@ const StudentDashboard = () => {
                             aria-label="Search students"
                         />
                         <Select onValueChange={(value) => toggleSort(value as keyof Student)}>
-                            <SelectTrigger className={`w-[180px] ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
+                            <SelectTrigger className={`w-full md:w-[180px] ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
                                 <SelectValue placeholder="Sort by" />
                             </SelectTrigger>
                             <SelectContent>
@@ -196,32 +196,51 @@ const StudentDashboard = () => {
                             className={`${theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-gray-100'}`}>
                             {theme === 'dark' ? '☀️' : '🌙'}
                         </Button>
+                        <div className="w-full md:w-auto">
+                            <Select onValueChange={(value) => {
+                                if (value === 'add') setIsFormOpen(true);
+                                else if (value === 'csv') {
+                                    const csvLink = document.querySelector('.csv-link') as HTMLAnchorElement;
+                                    csvLink?.click();
+                                }
+                                else if (value === 'pdf') exportToPDF();
+                            }}>
+                                <SelectTrigger className={`w-full md:hidden ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
+                                    <SelectValue placeholder="Actions" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="add">Add Student</SelectItem>
+                                    <SelectItem value="csv">Export CSV</SelectItem>
+                                    <SelectItem value="pdf">Export PDF</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
                         <Button onClick={() => setIsFormOpen(true)}
-                            className={`${theme === 'dark' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'}`}>
+                            className={`hidden md:inline-flex ${theme === 'dark' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'}`}>
                             Add Student
                         </Button>
-                        <CSVLink data={students} filename="students.csv">
+                        <CSVLink data={students} filename="students.csv" className="csv-link hidden md:block">
                             <Button className={`${theme === 'dark' ? 'bg-green-600 hover:bg-green-700' : 'bg-green-500 hover:bg-green-600'}`}>
                                 Export CSV
                             </Button>
                         </CSVLink>
                         <Button onClick={exportToPDF}
-                            className={`${theme === 'dark' ? 'bg-purple-600 hover:bg-purple-700' : 'bg-purple-500 hover:bg-purple-600'}`}>
+                            className={`hidden md:inline-flex ${theme === 'dark' ? 'bg-purple-600 hover:bg-purple-700' : 'bg-purple-500 hover:bg-purple-600'}`}>
                             Export PDF
                         </Button>
                     </div>
                 </div>
-                <div className="mb-6 flex space-x-2">
+                <div className="mb-6 flex flex-wrap gap-2">
                     <Button
                         variant={viewMode === 'grid' ? 'default' : 'outline'}
                         onClick={() => setViewMode('grid')}
                         className={`transition-colors duration-200 ${viewMode === 'grid'
-                                ? theme === 'dark'
-                                    ? 'bg-purple-600 hover:bg-purple-700 text-white'
-                                    : 'bg-purple-500 hover:bg-purple-600 text-white'
-                                : theme === 'dark'
-                                    ? 'bg-gray-800 hover:bg-gray-700 text-gray-300'
-                                    : 'bg-white hover:bg-gray-100 text-gray-800'
+                            ? theme === 'dark'
+                                ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                                : 'bg-purple-500 hover:bg-purple-600 text-white'
+                            : theme === 'dark'
+                                ? 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                                : 'bg-white hover:bg-gray-100 text-gray-800'
                             }`}
                     >
                         Grid View
@@ -230,12 +249,12 @@ const StudentDashboard = () => {
                         variant={viewMode === 'tile' ? 'default' : 'outline'}
                         onClick={() => setViewMode('tile')}
                         className={`transition-colors duration-200 ${viewMode === 'tile'
-                                ? theme === 'dark'
-                                    ? 'bg-purple-600 hover:bg-purple-700 text-white'
-                                    : 'bg-purple-500 hover:bg-purple-600 text-white'
-                                : theme === 'dark'
-                                    ? 'bg-gray-800 hover:bg-gray-700 text-gray-300'
-                                    : 'bg-white hover:bg-gray-100 text-gray-800'
+                            ? theme === 'dark'
+                                ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                                : 'bg-purple-500 hover:bg-purple-600 text-white'
+                            : theme === 'dark'
+                                ? 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                                : 'bg-white hover:bg-gray-100 text-gray-800'
                             }`}
                     >
                         Tile View
